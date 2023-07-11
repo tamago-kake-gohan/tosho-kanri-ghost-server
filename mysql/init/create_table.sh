@@ -1,0 +1,3 @@
+#!/bin/sh
+
+CMD_MYSQL="mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}"
