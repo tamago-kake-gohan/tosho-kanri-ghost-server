@@ -1,0 +1,34 @@
+version: "3"
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8888:8888
+    volumes:
+      - type: bind
+        source: ./src
+        target: /go/src
+    env_file:
+      - ./mysql/.env
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0.29
+    ports:
+      - 3306:3306
+    env_file:
+      - ./mysql/.env
+    volumes:
+      - type: volume
+        source: mysql_volume
+        target: /var/lib/mysql
+      - type: bind
+        source: ./mysql/init
+        target: /docker-entrypoint-initdb.d
+
+volumes:
+  mysql_volume:
+    name: mysql_volume
