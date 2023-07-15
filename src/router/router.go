@@ -25,5 +25,6 @@ func NewRouter(db *sql.DB, session *session.Manager) *http.ServeMux {
 	mux.Handle("/api/v1/update_user_book_state", utils.CORS(handler.NewUpdateUserBookStateHandler(session, db)))
 	mux.Handle("/api/v1/request_rental", utils.CORS(handler.NewRequestRentalHandler(session, db)))
 	mux.Handle("/api/v1/try_auth", utils.CORS(handler.NewTryAuthHandler(session)))
+	mux.Handle("/api/v1/process_request", utils.CORS(handler.NewProcessRequestHandler(session, db)))
 	return mux
 }
