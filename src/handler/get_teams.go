@@ -21,7 +21,7 @@ type GetTeamsHandler struct {
 	db   *sql.DB
 }
 
-func NewTeamsHandler(sess *session.Manager, db *sql.DB) *GetTeamsHandler {
+func NewGetTeamsHandler(sess *session.Manager, db *sql.DB) *GetTeamsHandler {
 	return &GetTeamsHandler{
 		sess: sess,
 		db:   db,
