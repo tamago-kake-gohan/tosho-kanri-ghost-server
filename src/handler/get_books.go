@@ -7,13 +7,19 @@ import (
 	"net/http"
 
 	"github.com/astaxie/session"
-	"tamago-kake-gohan.github.io/tosho-kanri-ghost/src/model"
 )
 
+type indexBook struct {
+	Id     int     `json:"id"`
+	Title  string  `json:"title"`
+	State  string  `json:"state"` //available, lending, unavailable
+	Rating float64 `json:"rating"`
+}
+
 type GetBooksResponse struct {
-	Message string        `json:"message"`
-	Status  string        `json:"status"`
-	Data    []*model.Book `json:"data"`
+	Message string       `json:"message"`
+	Status  string       `json:"status"`
+	Data    []*indexBook `json:"data"`
 }
 
 type GetBooksHandler struct {
@@ -40,19 +46,21 @@ func (h *GetBooksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	rows, err := h.db.Query("SELECT `Book`.*,`UserBook`.`State` FROM `UserBook` INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id` WHERE `UserBook`.`UserId` = ?", userId)
+	rows, err := h.db.Query("SELECT `UserBook`.`Id`,`Book`.`Title`,`UserBook`.`State` FROM `UserBook` INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id` WHERE `UserBook`.`UserId` = ?", userId)
 	if nil != err {
 		response.Message = "データの取得に失敗しました"
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	result := make([]*model.Book, 0)
+	result := make([]*indexBook, 0)
 	for rows.Next() {
-		book := &model.Book{}
-		if err := rows.Scan(&book.Id, &book.Author, &book.ISBN, &book.State, &book.Title); err != nil {
-			log.Fatalf("getRows rows.Scan error err:%v", err)
+		book := &indexBook{}
+		if err := rows.Scan(&book.Id, &book.Title, &book.State, &book.Title); err != nil {
+			log.Printf("getRows rows.Scan error err:%v", err)
+			continue
 		}
+		h.db.QueryRow("SELECT `Review`.`Rating` FROM `Review` WHERE `BookId` = ? AND `UserId` = ?", book.Id, userId).Scan(&book.Rating)
 		result = append(result, book)
 	}
 	response.Message = ""

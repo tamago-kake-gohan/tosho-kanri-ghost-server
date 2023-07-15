@@ -12,7 +12,7 @@ import (
 type GetTeamBooksResponse struct {
 	Message string      `json:"message"`
 	Status  string      `json:"status"`
-	Data    []*TeamBook `json:"data"`
+	Data    []*teamBook `json:"data"`
 }
 
 type GetTeamBooksHandler struct {
@@ -20,13 +20,10 @@ type GetTeamBooksHandler struct {
 	db   *sql.DB
 }
 
-type TeamBook struct {
+type teamBook struct {
 	Id        int    `json:"id"`
 	Title     string `json:"title"`
-	ISBN      string `json:"isbn"`
-	Author    string `json:"author"`
 	State     string `json:"state"` //available, lending, unavailable
-	Owner     int    `json:"owner"`
 	OwnerName string `json:"owner_name"`
 }
 
@@ -58,12 +55,12 @@ func (h *GetTeamBooksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	rows, _ := h.db.Query("SELECT `UserBook`.`Id`, `Book`.`Title`, `Book`.`ISBN`, `Book`.`Author`, `UserBook`.`State`, `User`.`Id` as `Owner`, `User`.`name` as `OwnerName` FROM `UserTeam` INNER JOIN `User` ON `User`.`Id` = `UserTeam`.`UserId` INNER JOIN `UserBook` ON `UserBook`.`UserId` = `User`.`Id` INNER JOIN `Book` ON `Book`.`Id` = `UserBook`.`BookId` WHERE `UserTeam`.`TeamId` = ?", teamId)
-	books := make([]*TeamBook, 0)
+	rows, _ := h.db.Query("SELECT `UserBook`.`Id`, `Book`.`Title`, `UserBook`.`State`, `User`.`name` as `OwnerName` FROM `UserTeam` INNER JOIN `User` ON `User`.`Id` = `UserTeam`.`UserId` INNER JOIN `UserBook` ON `UserBook`.`UserId` = `User`.`Id` INNER JOIN `Book` ON `Book`.`Id` = `UserBook`.`BookId` WHERE `UserTeam`.`TeamId` = ?", teamId)
+	books := make([]*teamBook, 0)
 	for rows.Next() {
-		book := &TeamBook{}
-		if err := rows.Scan(&book.Id, &book.Title, &book.ISBN, &book.Author, &book.State, &book.Owner, &book.OwnerName); err != nil {
-			log.Fatalf("getRows rows.Scan error err:%v", err)
+		book := &teamBook{}
+		if err := rows.Scan(&book.Id, &book.Title, &book.State, &book.OwnerName); err != nil {
+			log.Printf("getRows rows.Scan error err:%v", err)
 		}
 		books = append(books, book)
 	}
