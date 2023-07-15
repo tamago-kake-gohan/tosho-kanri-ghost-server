@@ -12,7 +12,6 @@ import (
 
 func main() {
 	loadEnv()
-	log.Printf("test")
 	StartServer()
 }
 
@@ -34,5 +33,6 @@ func StartServer() {
 		log.Fatal(err)
 	}
 	mux := router.NewRouter(db)
+	log.Printf("started server on 0.0.0.0%v", port)
 	http.ListenAndServe(port, mux)
 }
