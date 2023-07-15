@@ -40,7 +40,6 @@ func (h *GetTeamsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	log.Println(userId)
 	rows, err := h.db.Query("SELECT `Team`.* FROM `UserTeam` INNER JOIN `Team` ON `UserTeam`.`TeamId` = `Team`.`Id` WHERE `UserTeam`.`UserId` = ?", userId)
 	if nil != err {
 		response.Message = "データの取得に失敗しました"

@@ -3,7 +3,6 @@ package handler
 import (
 	"database/sql"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/astaxie/session"
@@ -42,7 +41,6 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	user := &model.User{}
 	err := h.db.QueryRow("SELECT * FROM User WHERE email = ?", body.Email).Scan(&user.Id, &user.Email, &user.Name, &user.Password)
 	if nil != err {
-		log.Println("ユーザーが存在しません", err)
 		response.Message = "メールアドレスまたはパスワードが間違っています"
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
@@ -50,7 +48,6 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 	if nil != err {
-		log.Println("メールアドレスまたはパスワードが間違っています", err)
 		response.Message = "メールアドレスまたはパスワードが間違っています"
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
