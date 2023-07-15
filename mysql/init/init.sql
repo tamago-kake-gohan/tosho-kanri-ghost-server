@@ -43,6 +43,7 @@ DROP TABLE IF EXISTS `User`;
 CREATE TABLE `User` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Email` varchar(256) NOT NULL,
+  `Name` varchar(256) NOT NULL,
   `Password` varchar(512) NOT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Email` (`Email`)

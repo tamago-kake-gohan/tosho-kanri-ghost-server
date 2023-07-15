@@ -24,6 +24,7 @@ type RegisterHandler struct {
 
 type RegisterBody struct {
 	Email    string `json:"email"`
+	Name     string `json:"name"`
 	Password string `json:"password"`
 }
 
@@ -36,7 +37,7 @@ func NewRegisterHandler(sess *session.Manager, db *sql.DB) *RegisterHandler {
 
 func (h *RegisterHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	response := RegisterResponse{}
-	var body LoginBody
+	var body RegisterBody
 	json.Unmarshal(utils.GetRequestBody(r), &body)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	user := &model.User{}
@@ -56,7 +57,7 @@ func (h *RegisterHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	h.db.Exec("INSERT INTO User (email,password) VALUES (?,?)", body.Email, string(hadhed))
+	h.db.Exec("INSERT INTO User (email,password,name) VALUES (?,?,?)", body.Email, string(hadhed), body.Name)
 	h.db.QueryRow("SELECT * FROM User WHERE email = ?", body.Email).Scan(&user.Id, &user.Email, &user.Password)
 	sess := h.sess.SessionStart(w, r)
 	sess.Set("user_id", user.Id)
