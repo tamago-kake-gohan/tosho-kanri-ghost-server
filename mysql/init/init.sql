@@ -55,6 +55,7 @@ CREATE TABLE `UserBook` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `UserId` int(11) NOT NULL,
   `BookId` int(11) NOT NULL,
+  `State` varchar(256) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `UserId` (`UserId`),
   KEY `BookId` (`BookId`),
