@@ -20,16 +20,20 @@ func ConnectDB() *sql.DB {
 		log.Fatal(err)
 	}
 	cfg := mysql.Config{
-		DBName:    dbname,
-		User:      user,
-		Passwd:    pass,
-		Addr:      host,
-		Net:       "tcp",
-		Loc:       jst,
-		ParseTime: true,
-		Collation: "utf8mb4_unicode_ci",
+		DBName:               dbname,
+		User:                 user,
+		Passwd:               pass,
+		Addr:                 host,
+		Net:                  "tcp",
+		Loc:                  jst,
+		ParseTime:            true,
+		Collation:            "utf8mb4_unicode_ci",
+		AllowNativePasswords: true,
 	}
 
 	db, err := sql.Open("mysql", cfg.FormatDSN())
+	if nil != err {
+		log.Fatal(err)
+	}
 	return db
 }

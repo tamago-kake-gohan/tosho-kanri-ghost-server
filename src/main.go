@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -12,7 +12,7 @@ import (
 
 func main() {
 	loadEnv()
-	fmt.Println("test")
+	log.Printf("test")
 	StartServer()
 }
 
@@ -20,7 +20,7 @@ func loadEnv() {
 	err := godotenv.Load(".env")
 
 	if err != nil {
-		fmt.Printf("読み込み出来ませんでした: %v", err)
+		log.Fatalf("読み込み出来ませんでした: %v", err)
 	}
 }
 
@@ -29,6 +29,10 @@ func StartServer() {
 		port = ":8080"
 	)
 	db := database.ConnectDB()
+	err := db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
 	mux := router.NewRouter(db)
 	http.ListenAndServe(port, mux)
 }
