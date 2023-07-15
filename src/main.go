@@ -32,7 +32,7 @@ func StartServer() {
 	db := database.ConnectDB()
 	err := db.Ping()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("データベースの疎通確認に失敗しました: %v", err)
 	}
 	session, _ := session.NewManager("memory", "gosessionid", 3600)
 	mux := router.NewRouter(db, session)

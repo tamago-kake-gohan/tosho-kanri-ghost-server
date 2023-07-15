@@ -17,7 +17,7 @@ func ConnectDB() *sql.DB {
 	dbname := os.Getenv("DB_NAME")
 	jst, err := time.LoadLocation("Asia/Tokyo")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("ローケルの取得に失敗しました: %v", err)
 	}
 	cfg := mysql.Config{
 		DBName:               dbname,
@@ -33,7 +33,7 @@ func ConnectDB() *sql.DB {
 
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if nil != err {
-		log.Fatal(err)
+		log.Fatalf("データベースへの接続に失敗しました: %v", err)
 	}
 	return db
 }
