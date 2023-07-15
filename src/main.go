@@ -6,6 +6,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
+	"tamago-kake-gohan.github.io/tosho-kanri-ghost/src/database"
 	"tamago-kake-gohan.github.io/tosho-kanri-ghost/src/router"
 )
 
@@ -27,6 +28,7 @@ func StartServer() {
 	const (
 		port = ":8080"
 	)
-	mux := router.NewRouter()
+	db := database.ConnectDB()
+	mux := router.NewRouter(db)
 	http.ListenAndServe(port, mux)
 }
