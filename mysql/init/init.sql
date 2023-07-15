@@ -44,7 +44,8 @@ CREATE TABLE `User` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Email` varchar(256) NOT NULL,
   `Password` varchar(512) NOT NULL,
-  PRIMARY KEY (`Id`)
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Email` (`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -69,7 +70,7 @@ CREATE TABLE `UserLendBook` (
   `BookId` int(11) NOT NULL,
   `Status` varchar(256) NOT NULL,
   PRIMARY KEY (`Id`),
-  KEY `OwnerId` (`OwnerId`),
+  UNIQUE KEY `OwnerId_BorrowedId_BookId` (`OwnerId`,`BorrowedId`,`BookId`),
   KEY `BorrowedId` (`BorrowedId`),
   KEY `BookId` (`BookId`),
   CONSTRAINT `UserLendBook_ibfk_1` FOREIGN KEY (`OwnerId`) REFERENCES `User` (`Id`),
