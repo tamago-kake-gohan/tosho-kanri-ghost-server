@@ -50,7 +50,7 @@ func (h *GetBooksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	result := make([]*model.Book, 0)
 	for rows.Next() {
 		book := &model.Book{}
-		if err := rows.Scan(&book.Id, &book.Author, &book.CCode, &book.ISBN, &book.State, &book.Title); err != nil {
+		if err := rows.Scan(&book.Id, &book.Author, &book.ISBN, &book.State, &book.Title); err != nil {
 			log.Fatalf("getRows rows.Scan error err:%v", err)
 		}
 		result = append(result, book)
