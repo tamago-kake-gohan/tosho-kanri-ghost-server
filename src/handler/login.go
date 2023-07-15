@@ -42,11 +42,14 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	user := &model.User{}
 	err := h.db.QueryRow("SELECT * FROM User WHERE email = ?", body.Email).Scan(&user.Id, &user.Email, &user.Password)
 	if nil != err {
-		log.Println(err)
+		log.Println("データの取得に失敗しました", err)
+		response.Message = "データの取得に失敗しました"
+		response.Status = "error"
+		json.NewEncoder(w).Encode(response)
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 	if nil != err {
-		log.Println(err)
+		log.Println("メールアドレスまたはパスワードが間違っています", err)
 		response.Message = "メールアドレスまたはパスワードが間違っています"
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
