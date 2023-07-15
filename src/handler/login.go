@@ -40,10 +40,10 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(utils.GetRequestBody(r), &body)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	user := &model.User{}
-	err := h.db.QueryRow("SELECT * FROM User WHERE email = ?", body.Email).Scan(&user.Id, &user.Email, &user.Password)
+	err := h.db.QueryRow("SELECT * FROM User WHERE email = ?", body.Email).Scan(&user.Id, &user.Email, &user.Name, &user.Password)
 	if nil != err {
-		log.Println("データの取得に失敗しました", err)
-		response.Message = "データの取得に失敗しました"
+		log.Println("ユーザーが存在しません", err)
+		response.Message = "メールアドレスまたはパスワードが間違っています"
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
 		return
