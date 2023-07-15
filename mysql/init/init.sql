@@ -82,15 +82,15 @@ DROP TABLE IF EXISTS `UserLendBook`;
 CREATE TABLE `UserLendBook` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `OwnerId` int(11) NOT NULL,
-  `BorrowedId` int(11) NOT NULL,
+  `BorrowerId` int(11) NOT NULL,
   `UserBookId` int(11) NOT NULL,
   `Status` varchar(256) NOT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `OwnerId_BorrowedId_BookId` (`OwnerId`,`BorrowedId`,`UserBookId`),
-  KEY `BorrowedId` (`BorrowedId`),
+  UNIQUE KEY `OwnerId_BorrowerId_BookId` (`OwnerId`,`BorrowerId`,`UserBookId`),
+  KEY `BorrowerId` (`BorrowerId`),
   KEY `UserBookId` (`UserBookId`),
   CONSTRAINT `UserLendBook_ibfk_1` FOREIGN KEY (`OwnerId`) REFERENCES `User` (`Id`),
-  CONSTRAINT `UserLendBook_ibfk_2` FOREIGN KEY (`BorrowedId`) REFERENCES `User` (`Id`),
+  CONSTRAINT `UserLendBook_ibfk_2` FOREIGN KEY (`BorrowerId`) REFERENCES `User` (`Id`),
   CONSTRAINT `UserLendBook_ibfk_3` FOREIGN KEY (`UserBookId`) REFERENCES `UserBook` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
