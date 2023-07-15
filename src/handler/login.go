@@ -46,6 +46,7 @@ func (h *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		response.Message = "データの取得に失敗しました"
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
+		return
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 	if nil != err {
