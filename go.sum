@@ -1,3 +1,5 @@
+github.com/astaxie/session v0.0.0-20130408050157-95d7fe18579c h1:FcFM+gBQ9Os0GEs3OOk9bmq3sHj8VkiRYHIpiLFfZSI=
+github.com/astaxie/session v0.0.0-20130408050157-95d7fe18579c/go.mod h1:0t1M8SLguRDiNomJJpdjSW2cifFnPTIX0HNL9MyMC78=
 github.com/go-sql-driver/mysql v1.7.1 h1:lUIinVbN1DY0xBg0eMOzmmtGoHwWBbvnWubQUrtU8EI=
 github.com/go-sql-driver/mysql v1.7.1/go.mod h1:OXbVy3sEdcQ2Doequ6Z5BW6fXNQTmx+9S1MCJN5yJMI=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=

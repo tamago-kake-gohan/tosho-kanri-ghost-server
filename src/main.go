@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/astaxie/session"
+	_ "github.com/astaxie/session/providers/memory"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"tamago-kake-gohan.github.io/tosho-kanri-ghost/src/database"
@@ -32,7 +34,9 @@ func StartServer() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	mux := router.NewRouter(db)
+	session, _ := session.NewManager("memory", "gosessionid", 3600)
+	mux := router.NewRouter(db, session)
 	log.Printf("started server on 0.0.0.0%v", port)
 	http.ListenAndServe(port, mux)
+	go session.GC()
 }
