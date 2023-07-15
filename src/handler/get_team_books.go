@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/astaxie/session"
+	"tamago-kake-gohan.github.io/tosho-kanri-ghost/src/model"
 )
 
 type GetTeamBooksResponse struct {
@@ -41,8 +42,10 @@ func (h *GetTeamBooksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	userId := sess.Get("user_id")
 	if nil == userId {
 		w.WriteHeader(http.StatusForbidden)
+		response := model.ForbiddenResponse{}
 		response.Message = "ログインしてください"
 		response.Status = "error"
+		response.Code = 403
 		json.NewEncoder(w).Encode(response)
 		return
 	}

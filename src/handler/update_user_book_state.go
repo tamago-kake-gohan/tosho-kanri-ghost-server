@@ -38,9 +38,10 @@ func (h *UpdateUserBookStateHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 	userId := sess.Get("user_id")
 	if nil == userId {
 		w.WriteHeader(http.StatusForbidden)
-		response := GetTeamsResponse{}
+		response := model.ForbiddenResponse{}
 		response.Message = "ログインしてください"
 		response.Status = "error"
+		response.Code = 403
 		json.NewEncoder(w).Encode(response)
 		return
 	}
