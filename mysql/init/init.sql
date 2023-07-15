@@ -27,6 +27,21 @@ CREATE TABLE `LendHistory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
+DROP TABLE IF EXISTS `Review`;
+CREATE TABLE `Review` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `BookId` int(11) NOT NULL,
+  `UserId` int(11) NOT NULL,
+  `Comment` text NOT NULL,
+  `Rating` float NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `BookId` (`BookId`),
+  KEY `UserId` (`UserId`),
+  CONSTRAINT `Review_ibfk_1` FOREIGN KEY (`BookId`) REFERENCES `Book` (`Id`),
+  CONSTRAINT `Review_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 DROP TABLE IF EXISTS `Team`;
 CREATE TABLE `Team` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
