@@ -11,7 +11,6 @@ CREATE TABLE `Book` (
   `Title` varchar(256) NOT NULL,
   `ISBN` varchar(256) NOT NULL,
   `Author` varchar(256) NOT NULL,
-  `CCode` varchar(4) NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
