@@ -7,26 +7,18 @@ import (
 	"net/http"
 
 	"github.com/astaxie/session"
+	"tamago-kake-gohan.github.io/tosho-kanri-ghost/src/model"
 )
 
 type GetBooksResponse struct {
-	Message string  `json:"message"`
-	Status  string  `json:"status"`
-	Data    []*Book `json:"data"`
+	Message string        `json:"message"`
+	Status  string        `json:"status"`
+	Data    []*model.Book `json:"data"`
 }
 
 type GetBooksHandler struct {
 	sess *session.Manager
 	db   *sql.DB
-}
-
-type Book struct {
-	Id     int    `json:"id"`
-	Title  string `json:"title"`
-	ISBN   string `json:"isbn"`
-	Author string `json:"author"`
-	CCode  string `json:"c_code"`
-	State  string `json:"state"` //available, lending, unavailable
 }
 
 func NewGetBooksHandler(sess *session.Manager, db *sql.DB) *GetBooksHandler {
@@ -55,9 +47,9 @@ func (h *GetBooksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	result := make([]*Book, 0)
+	result := make([]*model.Book, 0)
 	for rows.Next() {
-		book := &Book{}
+		book := &model.Book{}
 		if err := rows.Scan(&book.Id, &book.Author, &book.CCode, &book.ISBN, &book.State, &book.Title); err != nil {
 			log.Fatalf("getRows rows.Scan error err:%v", err)
 		}

@@ -6,4 +6,5 @@ type Book struct {
 	ISBN   string `json:"isbn"`
 	Author string `json:"author"`
 	CCode  string `json:"c_code"`
+	State  string `json:"state"` //available, lending, unavailable
 }
