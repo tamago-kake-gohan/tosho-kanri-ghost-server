@@ -15,5 +15,6 @@ func NewRouter(db *sql.DB, session *session.Manager) *http.ServeMux {
 	mux.Handle("/api/v1/login", handler.NewLoginHandler(session, db))
 	mux.Handle("/api/v1/register", handler.NewRegisterHandler(session, db))
 	mux.Handle("/api/v1/logout", handler.NewLogoutHandler(session))
+	mux.Handle("/api/v1/get_teams", handler.NewTeamsHandler(session, db))
 	return mux
 }
