@@ -50,7 +50,8 @@ func (h *GetTeamBooksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	teamId := r.URL.Query().Get("team_id")
-	err := h.db.QueryRow("SELECT * FROM `UserTeam` WHERE `UserId` = ? AND `TeamId` = ?", userId, teamId)
+	var userTeam model.UserTeam
+	err := h.db.QueryRow("SELECT * FROM `UserTeam` WHERE `UserId` = ? AND `TeamId` = ?", userId, teamId).Scan(&userTeam.Id, &userTeam.UserId, &userTeam.TeamId)
 	if nil != err {
 		w.WriteHeader(http.StatusForbidden)
 		response.Message = "権限がありません"
