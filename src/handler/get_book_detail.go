@@ -3,6 +3,7 @@ package handler
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/astaxie/session"
@@ -53,15 +54,16 @@ func (h *GetBookDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	userBookId := r.URL.Query().Get("user_book_id")
 	var book bookDetail
 	err := h.db.QueryRow(
-		"SELECT `Owner`.`Name` as `OwnerName`, `Book`.`Title`,`Book`.`ISBN`, `UserBook`.`State`, `Borrower`.`Name` as `BorrowerName`, `Review`.`Rating`"+
+		"SELECT `Owner`.`Name` as `OwnerName`, `Book`.`Title`,`Book`.`ISBN`, `UserBook`.`State`, `Borrower`.`Name` as `BorrowerName`, IFNULL(`Review`.`Rating`,0) as `Rating`"+
 			"FROM `UserBook`"+
 			"INNER JOIN `User` as `Owner` ON `UserBook`.`UserId` = `Owner`.`Id` "+
 			"INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id`"+
 			"LEFT JOIN `Review` ON `Owner`.`Id` = `Review`.`UserId` AND `Review`.`BookId` = `Book`.`Id`"+
 			"LEFT JOIN `UserLendBook` ON `UserLendBook`.`OwnerId` = `Owner`.`Id` AND `UserLendBook`.`UserBookId` = `UserBook`.`Id` AND `UserLendBook`.`Status` = 'accepted'"+
 			"LEFT JOIN `User` as `Borrower` ON `UserLendBook`.`BorrowerId` = `Borrower`.`Id`"+
-			"WHERE `UserBook`.`Id` = ?", userBookId).Scan(&book.OwnerName, &book.Title, &book.State, &book.BorrowerName, &book.Rating, &book.ISBN)
+			"WHERE `UserBook`.`Id` = ?", userBookId).Scan(&book.OwnerName, &book.Title, &book.ISBN, &book.State, &book.BorrowerName, &book.Rating)
 	if nil != err {
+		log.Println(err)
 		response.Message = "データの取得に失敗しました"
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
