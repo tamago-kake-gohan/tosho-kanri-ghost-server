@@ -59,7 +59,7 @@ func (h *GetBooksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	result := make([]*indexBook, 0)
 	for rows.Next() {
 		book := &indexBook{}
-		if err := rows.Scan(&book.Id, &book.Title, &book.State, &book.Title); err != nil {
+		if err := rows.Scan(&book.Id, &book.Title, &book.State); err != nil {
 			log.Printf("getRows rows.Scan error err:%v", err)
 			continue
 		}
