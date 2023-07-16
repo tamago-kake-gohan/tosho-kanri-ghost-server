@@ -54,7 +54,7 @@ func (h *GetBookDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	userBookId := r.URL.Query().Get("user_book_id")
 	var book bookDetail
 	err := h.db.QueryRow(
-		"SELECT `Owner`.`Name` as `OwnerName`, `Book`.`Title`,`Book`.`ISBN`, `UserBook`.`State`, IFNULL(`Borrower`.`Name` as `BorrowerName`,''), IFNULL(`Review`.`Rating`,0) as `Rating`"+
+		"SELECT `Owner`.`Name` as `OwnerName`, `Book`.`Title`,`Book`.`ISBN`, `UserBook`.`State`, IFNULL(`Borrower`.`Name`,'') as `BorrowerName`, IFNULL(`Review`.`Rating`,0) as `Rating`"+
 			"FROM `UserBook`"+
 			"INNER JOIN `User` as `Owner` ON `UserBook`.`UserId` = `Owner`.`Id` "+
 			"INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id`"+
