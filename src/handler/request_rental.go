@@ -56,8 +56,9 @@ func (h *RequestRentalHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 		response.Message = "該当の本が見つかりませんでした"
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
+		return
 	}
-	if !utils.IsUserInTeam(h.db, userBook.BookId, body.TeamId) || !utils.IsUserInTeam(h.db, userId.(int), body.TeamId) {
+	if !utils.IsUserInTeam(h.db, userBook.UserId, body.TeamId) || !utils.IsUserInTeam(h.db, userId.(int), body.TeamId) {
 		w.WriteHeader(http.StatusBadRequest)
 		response := RequestRentalResponse{}
 		response.Message = "チームに所属していません"
