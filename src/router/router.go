@@ -28,5 +28,6 @@ func NewRouter(db *sql.DB, session *session.Manager) *http.ServeMux {
 	mux.Handle("/api/v1/process_request", utils.CORS(handler.NewProcessRequestHandler(session, db)))
 	mux.Handle("/api/v1/process_return", utils.CORS(handler.NewProcessReturnHandler(session, db)))
 	mux.Handle("/api/v1/get_requests", utils.CORS(handler.NewGetRequestsHandler(session, db)))
+	mux.Handle("/api/v1/set_rate", utils.CORS(handler.NewSetRateHandler(session, db)))
 	return mux
 }
