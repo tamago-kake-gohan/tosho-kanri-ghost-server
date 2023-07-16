@@ -49,7 +49,7 @@ func (h *RequestRentalHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	json.Unmarshal(utils.GetRequestBody(r), &body)
 
 	var userBook = model.UserBook{}
-	err := h.db.QueryRow("SELECT * FROM `UserBook` WHERE `UserId` = ? AND `Id` = ?", userId, body.UserBookId).Scan(&userBook.Id, &userBook.UserId, &userBook.BookId, &userBook.State)
+	err := h.db.QueryRow("SELECT * FROM `UserBook` WHERE `Id` = ?", userId, body.UserBookId).Scan(&userBook.Id, &userBook.UserId, &userBook.BookId, &userBook.State)
 	if nil != err {
 		w.WriteHeader(http.StatusNotFound)
 		response := RequestRentalResponse{}
