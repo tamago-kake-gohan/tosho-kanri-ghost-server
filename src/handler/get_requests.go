@@ -14,6 +14,7 @@ type Request struct {
 	Id           int    `json:"id"`
 	Title        string `json:"title"`
 	BorrowerName string `json:"borrower_name"`
+	Status       string `json:"status"`
 }
 
 type GetRequestsResponse struct {
@@ -48,7 +49,7 @@ func (h *GetRequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	rows, err := h.db.Query("SELECT `UserLendBook`.`Id`,`Book`.`Title`, `Borrower`.`Name` as `BorrowerName` FROM `UserLendBook` INNER JOIN `UserBook` ON `UserLendBook`.`UserBookId` = `UserBook`.`Id` INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id` INNER JOIN `User` as `Borrower` ON `UserLendBook`.`BorrowerId` = `Borrower`.`Id`", userId)
+	rows, err := h.db.Query("SELECT `UserLendBook`.`Id`,`Book`.`Title`, `Borrower`.`Name` as `BorrowerName`,`UserLendBook`.`Status` FROM `UserLendBook` INNER JOIN `UserBook` ON `UserLendBook`.`UserBookId` = `UserBook`.`Id` INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id` INNER JOIN `User` as `Borrower` ON `UserLendBook`.`BorrowerId` = `Borrower`.`Id`", userId)
 	if nil != err {
 		response.Message = "データの取得に失敗しました"
 		response.Status = "error"
@@ -58,7 +59,7 @@ func (h *GetRequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	result := make([]*Request, 0)
 	for rows.Next() {
 		request := &Request{}
-		if err := rows.Scan(&request.Id, &request.Title, &request.BorrowerName); err != nil {
+		if err := rows.Scan(&request.Id, &request.Title, &request.BorrowerName, &request.Status); err != nil {
 			log.Printf("getRows rows.Scan error err:%v", err)
 			continue
 		}
