@@ -1,6 +1,9 @@
 FROM golang:1.20-alpine
 LABEL org.opencontainers.image.source=https://github.com/tamago-kake-gohan/tosho-kanri-ghost-server
-RUN apk update && apk add git
-WORKDIR /go/src
+ENV GOPATH=""
+RUN apk update
 
-CMD ["go", "run", "main.go"]
+WORKDIR /go/
+COPY ./ ./
+
+CMD ["go", "run", "./src/main.go"]
