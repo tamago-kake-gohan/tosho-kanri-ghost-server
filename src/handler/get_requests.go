@@ -3,6 +3,7 @@ package handler
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -49,9 +50,9 @@ func (h *GetRequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	rows, err := h.db.Query("SELECT `UserLendBook`.`Id`,`Book`.`Title`, `Borrower`.`Name` as `BorrowerName`,`UserLendBook`.`Status` FROM `UserLendBook` INNER JOIN `UserBook` ON `UserLendBook`.`UserBookId` = `UserBook`.`Id` INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id` INNER JOIN `User` as `Borrower` ON `UserLendBook`.`BorrowerId` = `Borrower`.`Id`", userId)
+	rows, err := h.db.Query("SELECT `UserLendBook`.`Id`,`Book`.`Title`, `Borrower`.`Name` as `BorrowerName`,`UserLendBook`.`Status` FROM `UserLendBook` INNER JOIN `UserBook` ON `UserLendBook`.`UserBookId` = `UserBook`.`Id` INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id` INNER JOIN `User` as `Borrower` ON `UserLendBook`.`BorrowerId` = `Borrower`.`Id` WHERE `UserLendBook`.`OwnerId` = ?", userId)
 	if nil != err {
-		response.Message = "データの取得に失敗しました"
+		response.Message = fmt.Sprintf("データの取得に失敗しました (%s)", err)
 		response.Status = "error"
 		json.NewEncoder(w).Encode(response)
 		return
