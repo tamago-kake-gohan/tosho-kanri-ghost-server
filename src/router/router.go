@@ -18,6 +18,7 @@ func NewRouter(db *sql.DB, session *session.Manager) *http.ServeMux {
 	mux.Handle("/api/v1/logout", utils.CORS(handler.NewLogoutHandler(session)))
 	mux.Handle("/api/v1/get_teams", utils.CORS(handler.NewGetTeamsHandler(session, db)))
 	mux.Handle("/api/v1/get_team_books", utils.CORS(handler.NewGetTeamBooksHandler(session, db)))
+	mux.Handle("/api/v1/get_team_books/conditions", utils.CORS(handler.NewGetTeamBooksConditionHandler(session, db)))
 	mux.Handle("/api/v1/create_teams", utils.CORS(handler.NewCreateTeamsHandler(session, db)))
 	mux.Handle("/api/v1/get_books", utils.CORS(handler.NewGetBooksHandler(session, db)))
 	mux.Handle("/api/v1/add_book", utils.CORS(handler.NewAddBookHandler(session, db)))
