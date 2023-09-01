@@ -21,8 +21,8 @@ type ProcessRequestHandler struct {
 }
 
 type ProcessRequestBody struct {
-	UserBookId int  `json:"user_book_id"`
-	Accept     bool `json:"accept"`
+	UserLendBookId int  `json:"user_lend_book_id"`
+	Accept         bool `json:"accept"`
 }
 
 func NewProcessRequestHandler(sess *session.Manager, db *sql.DB) *ProcessRequestHandler {
@@ -49,7 +49,7 @@ func (h *ProcessRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	json.Unmarshal(utils.GetRequestBody(r), &body)
 
 	var userBook = model.UserBook{}
-	err := h.db.QueryRow("SELECT * FROM `UserLendBook` WHERE `UserId` = ? AND `Id` = ? AND `Status` = 'requested'", userId, body.UserBookId).Scan(&userBook.Id, &userBook.UserId, &userBook.BookId, &userBook.State)
+	err := h.db.QueryRow("SELECT * FROM `UserLendBook` WHERE `OwnerId` = ? AND `Id` = ? AND `Status` = 'requested'", userId, body.UserLendBookId).Scan(&userBook.Id, &userBook.UserId, &userBook.BookId, &userBook.State)
 	if nil != err {
 		w.WriteHeader(http.StatusNotFound)
 		response := ProcessRequestResponse{}
@@ -61,7 +61,7 @@ func (h *ProcessRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 	if !body.Accept {
 		status = "rejected"
 	}
-	h.db.Exec("UPDATE `UserLendBook` SET `Status` = ? WHERE `Id` = ?", status, body.UserBookId)
+	h.db.Exec("UPDATE `UserLendBook` SET `Status` = ? WHERE `Id` = ?", status, body.UserLendBookId)
 	response := ProcessRequestResponse{}
 	response.Message = "リクエストを処理しました"
 	response.Status = "success"
