@@ -17,6 +17,7 @@ type Request struct {
 	BorrowerName string `json:"borrower_name"`
 	Status       string `json:"status"`
 	UserBookId   string `json:"user_book_id"`
+	BorrowerEmail string `json:"borrower_email"`
 }
 
 type GetRequestsResponse struct {
@@ -51,7 +52,7 @@ func (h *GetRequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-	rows, err := h.db.Query("SELECT `UserLendBook`.`Id`,`Book`.`Title`, `Borrower`.`Name` as `BorrowerName`,`UserLendBook`.`Status`, `UserBook`.`Id` FROM `UserLendBook` INNER JOIN `UserBook` ON `UserLendBook`.`UserBookId` = `UserBook`.`Id` INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id` INNER JOIN `User` as `Borrower` ON `UserLendBook`.`BorrowerId` = `Borrower`.`Id` WHERE `UserLendBook`.`OwnerId` = ?", userId)
+	rows, err := h.db.Query("SELECT `UserLendBook`.`Id`,`Book`.`Title`, `Borrower`.`Name` as `BorrowerName`,`UserLendBook`.`Status`, `UserBook`.`Id`,`Borrower`.`Email` as `BorrowerEmail` FROM `UserLendBook` INNER JOIN `UserBook` ON `UserLendBook`.`UserBookId` = `UserBook`.`Id` INNER JOIN `Book` ON `UserBook`.`BookId` = `Book`.`Id` INNER JOIN `User` as `Borrower` ON `UserLendBook`.`BorrowerId` = `Borrower`.`Id` WHERE `UserLendBook`.`OwnerId` = ?", userId)
 	if nil != err {
 		response.Message = fmt.Sprintf("データの取得に失敗しました (%s)", err)
 		response.Status = "error"
@@ -61,7 +62,7 @@ func (h *GetRequestsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	result := make([]*Request, 0)
 	for rows.Next() {
 		request := &Request{}
-		if err := rows.Scan(&request.Id, &request.Title, &request.BorrowerName, &request.Status, &request.UserBookId); err != nil {
+		if err := rows.Scan(&request.Id, &request.Title, &request.BorrowerName, &request.Status, &request.UserBookId, &request.BorrowerEmail); err != nil {
 			log.Printf("getRows rows.Scan error err:%v", err)
 			continue
 		}
